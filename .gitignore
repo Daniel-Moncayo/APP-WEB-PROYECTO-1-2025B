@@ -1,0 +1,19 @@
+# Eclipse / IDE
+.settings/
+bin/
+build/
+target/
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / temporales
+*.log
+*.tmp
+
+# Archives / distribuibles
+*.jar
+*.war
+*.ear

@@ -11,5 +11,4 @@ public class CategoriaDAO {
 		// TODO - implement CategoriaDAO.obtenerTodas
 		throw new UnsupportedOperationException();
 	}
-
 }

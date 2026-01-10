@@ -1,19 +1,53 @@
-# Eclipse / IDE
-.settings/
-bin/
-build/
+# --- Maven (Vital) ---
 target/
-*.class
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# Wrapper de Maven (opcional, si prefieres no subir el jar del wrapper)
+!.mvn/wrapper/maven-wrapper.jar
 
-# OS
+# --- Eclipse (Ignorar TODO porque usas Maven) ---
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.classpath
+.factorypath
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# --- VS Code ---
+.vscode/
+*.code-workspace
+.history/
+
+# --- Sistema Operativo ---
 .DS_Store
 Thumbs.db
 
-# Logs / temporales
+# --- Logs y Errores ---
 *.log
-*.tmp
+hs_err_pid*
 
-# Archives / distribuibles
-*.jar
-*.war
-*.ear
+# --- Secretos / Configuración Local (Recomendación extra) ---
+# Si tienes un archivo properties con la contraseña de tu base de datos JPA
+# que es solo para tu máquina local, agrégalo aquí. Ejemplo:
+# application-local.properties

@@ -11,5 +11,10 @@ public class PlanificarHabitoController {
 		// TODO - implement PlanificarHabitoController.guardar
 		throw new UnsupportedOperationException();
 	}
+	
+	public void obtenerSinPlanificacion() {
+		// TODO - implement PlanificarHabitoController.obtenerSinPlanificacion
+		throw new UnsupportedOperationException();
+	}
 
 }

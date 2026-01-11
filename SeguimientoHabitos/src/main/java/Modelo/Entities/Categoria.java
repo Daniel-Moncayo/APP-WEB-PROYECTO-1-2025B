@@ -1,5 +1,8 @@
 package Modelo.Entities;
 
+import java.io.Serializable;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,17 +11,33 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "categoria")
-public class Categoria {
-    @Id
+//1.
+public class Categoria implements Serializable {
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCategoria;
     
+    @Column(name = "nombre")
     private String nombre;
 
-    // Constructor vacío (obligatorio para JPA)
+    // 2. Constructor vacío (obligatorio para JPA)
     public Categoria() {}
+    
 
-    // Getters y Setters
+    public Categoria(int idCategoria, String nombre) {
+		super();
+		this.idCategoria = idCategoria;
+		this.nombre = nombre;
+	}
+
+
+	// 3. Getters y Setters
     public int getIdCategoria() { return idCategoria; }
     public void setIdCategoria(int idCategoria) { this.idCategoria = idCategoria; }
 

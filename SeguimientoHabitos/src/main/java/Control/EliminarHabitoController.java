@@ -1,17 +1,38 @@
 package Control;
 
-public class EliminarHabitoController {
+import java.io.IOException;
 
-	public void eliminarHabito() {
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/EliminarHabitoController")
+public class EliminarHabitoController extends HttpServlet{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 		
-		// TODO - implement EliminarHabitoController.eliminarHabito
-		throw new UnsupportedOperationException();
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
 
-	public void seleccionarHabito() {
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	}
 
-		// TODO - implement EliminarHabitoController.seleccionarHabito
-		throw new UnsupportedOperationException();
+	public void eliminarHabito(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+//		1. Obtener parámetros
+//		2. Hablar con modelo
+//		3. Llamar a la vista
+		
+	}
+
+	public void seleccionarHabito(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 	}
 
 }

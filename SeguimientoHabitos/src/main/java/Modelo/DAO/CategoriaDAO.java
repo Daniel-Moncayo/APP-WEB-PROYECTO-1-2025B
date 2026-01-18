@@ -12,7 +12,7 @@ import Modelo.Entities.Categoria;
 public class CategoriaDAO {
 	
 	private EntityManagerFactory emf;
-	private EntityManager em;
+	private static EntityManager em;
 	
 	public CategoriaDAO() {
 		emf = Persistence.createEntityManagerFactory("persistencia");
@@ -50,7 +50,7 @@ public class CategoriaDAO {
 		}
 	}
 
-	public List<Categoria> obtenerTodas() {
+	public static List<Categoria> obtenerTodas() {
 		TypedQuery<Categoria> query = em.createQuery("SELECT c FROM Categoria c", Categoria.class);
 		return query.getResultList();
 	}

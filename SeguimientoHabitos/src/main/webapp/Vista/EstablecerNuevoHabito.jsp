@@ -85,7 +85,7 @@
                 document.getElementById('errorModal').classList.add('show');
             } else {
                 // Redirigir a planificar hábito
-                window.location.href = 'planificar-habito.html';
+                window.location.href = 'PlanificarHabito.jsp';
             }
         });
         

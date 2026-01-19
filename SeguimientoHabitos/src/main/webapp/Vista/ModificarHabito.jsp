@@ -96,11 +96,11 @@
         function editarHabito(habitoId) {
             // Guardar el ID del hábito para editar
             localStorage.setItem('habitoEditarId', habitoId);
-            window.location.href = 'editar-planificacion.html';
+            window.location.href = 'ModificarHabito.jsp';
         }
 
         function redirectToMain() {
-            window.location.href = 'pantalla-principal.html';
+            window.location.href = 'GestionarHabito.jsp';
         }
     </script>
 </body>

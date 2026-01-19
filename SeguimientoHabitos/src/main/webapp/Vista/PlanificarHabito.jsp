@@ -153,7 +153,7 @@
             } else {
                 // Guardar y redirigir
                 alert('Hábito planificado exitosamente');
-                window.location.href = 'pantalla-principal.html';
+                window.location.href = 'GestionarHabitos.jsp';
             }
         });
         

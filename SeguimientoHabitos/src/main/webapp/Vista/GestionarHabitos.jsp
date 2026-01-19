@@ -83,7 +83,7 @@
                     </div>
                     <h3>Eliminar Hábito</h3>
                     <p>Registra el cumplimiento de tus hábitos</p>
-                    <a href="EliminarHabito.jsp" class="module-btn">Eliminar</a>
+                    <a href="../EliminarHabitoController" class="module-btn">Eliminar</a>
                 </div>
             </div>
         </main>

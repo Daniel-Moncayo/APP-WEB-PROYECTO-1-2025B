@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hábito Eliminado - Habit Tracker</title>
+    <title>Error - Habit Tracker</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Vista/Styles/styles.css">
 </head>
 <body>
@@ -22,14 +22,14 @@
         <main class="dashboard-main">
             <div class="form-container">
                 <div class="form-header">
-                    <h2>Hábito eliminado</h2>
-                    <p>La operación se completó correctamente.</p>
+                    <h2>Ocurrió un error</h2>
+                    <p>Lo sentimos, hubo un problema al procesar tu solicitud.</p>
                 </div>
 
                 <div class="habit-stat-card">
-                    <p style="color:var(--primary); font-weight:600; margin-bottom:12px;">${mensaje}</p>
+                    <p style="color:#7f1d1d; font-weight:600; margin-bottom:12px;">${error}</p>
                     <div style="display:flex; gap:12px;">
-                        <a href="${pageContext.request.contextPath}/Vista/EliminarHabito.jsp" class="module-btn">Volver a eliminar</a>
+                        <a href="${pageContext.request.contextPath}/Vista/EliminarHabito.jsp" class="module-btn">Volver</a>
                         <a href="${pageContext.request.contextPath}/Vista/GestionarHabitos.jsp" class="btn-cancel">Ir al Dashboard</a>
                     </div>
                 </div>

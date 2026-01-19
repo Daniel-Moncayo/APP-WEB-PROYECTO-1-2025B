@@ -21,7 +21,7 @@ public class HabitoDAO {
 
 	private void inicializarHabitos() {
 		try {
-			TypedQuery<Long> query = em.createQuery("SELECT COUNT(h) FROM Habito h", long.class);
+			TypedQuery<Long> query = em.createQuery("SELECT COUNT(h) FROM Habito h", Long.class);
 			Long count = query.getSingleResult();
 			
 			if (count == 0) {
@@ -68,7 +68,7 @@ public class HabitoDAO {
 	 * @return una lista de hábitos creados
 	 */
 	public List<Habito> listarHabitos() {
-		return em.createNamedQuery("SELECT h FROM Habito h", Habito.class).getResultList();
+		return em.createQuery("SELECT h FROM Habito h", Habito.class).getResultList();
 	}
 
 	public void actualizarHabito(Habito habito) {
@@ -84,17 +84,21 @@ public class HabitoDAO {
 	/**
 	 * Eliminar habitos por su id
 	 * @param id del hábito
+	 * @return true si se eliminó, false si no se encontró
 	 */
-	public void eliminarHabito(int id) {
+	public boolean eliminarHabito(int id) {
 		try {
 			Habito h = em.find(Habito.class, id);
 			if (h != null) {
 				em.getTransaction().begin();
 				em.remove(h);
 				em.getTransaction().commit();
+				return true;
 			}
+			return false;
 		} catch (Exception e) {
-			em.getTransaction().rollback();
+			try { em.getTransaction().rollback(); } catch (Exception ex) { }
+			return false;
 		}
 	}
 

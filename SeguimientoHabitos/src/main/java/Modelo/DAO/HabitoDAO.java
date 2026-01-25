@@ -2,6 +2,7 @@ package Modelo.DAO;
 
 import java.util.List;
 
+import Modelo.Entities.Categoria;
 import Modelo.Entities.Habito;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -10,14 +11,10 @@ import jakarta.persistence.TypedQuery;
 
 public class HabitoDAO {
 	
-	private EntityManagerFactory emf;
-	private EntityManager em;
+	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistence");
+	private static EntityManager em;
 
-	public HabitoDAO() {
-		emf = Persistence.createEntityManagerFactory("persistence");
-		em = emf.createEntityManager();
-		inicializarHabitos();
-	}
+	public HabitoDAO() {}
 
 	private void inicializarHabitos() {
 		try {
@@ -36,17 +33,37 @@ public class HabitoDAO {
 	 * Guarda un hábito deseado
 	 * @param habito
 	 */
-	public void guardar(Habito habito) {
-		try {
-			em.getTransaction().begin();
-			em.persist(habito);
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			em.getTransaction().rollback();
-			e.printStackTrace();
-		}
-	}
-
+	public static void guardar(Habito habito, int idCategoria) {
+        // Creamos un EntityManager nuevo para cada operación (Más seguro para web)
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            em.getTransaction().begin();
+            
+            // Buscamos la categoría
+            Categoria cat = em.find(Categoria.class, idCategoria);
+            
+            if (cat != null) {
+                habito.setCategoria(cat);
+                em.persist(habito);
+                em.getTransaction().commit();
+                System.out.println("Hábito guardado con éxito.");
+            } else {
+                System.err.println("ERROR: No existe la categoría con ID " + idCategoria);
+            }
+            
+        } catch (Exception e) {
+            System.err.println("ERROR AL GUARDAR EN BD:");
+            e.printStackTrace();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+        } finally {
+            // Cerramos el gestor
+            em.close();
+        }
+    }
+	
 	/**
 	 * Obtiene habitos que no han sido planificados
 	 * @param planificado

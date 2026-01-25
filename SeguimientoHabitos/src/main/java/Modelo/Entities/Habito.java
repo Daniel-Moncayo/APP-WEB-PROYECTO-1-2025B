@@ -21,9 +21,6 @@ import jakarta.persistence.TemporalType;
 @Table(name="Habito")
 public class Habito implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -48,6 +45,9 @@ public class Habito implements Serializable{
 
     @Temporal(TemporalType.TIME) // Indica que en la BD solo guarde la hora
     private Date horario;
+    
+    @Column(name="descripcion")
+    private String descripcion;
 
     public Habito() {}
 
@@ -107,8 +107,17 @@ public class Habito implements Serializable{
 		this.horario = horario;
 	}
 
+	
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
 	public Habito(int idHabito, String nombre, Categoria categoria, Date fechaInicio, int frecuencia, String dia,
-			Date horario) {
+			Date horario, String descripcion) {
 		super();
 		this.idHabito = idHabito;
 		this.nombre = nombre;
@@ -117,6 +126,7 @@ public class Habito implements Serializable{
 		this.frecuencia = frecuencia;
 		this.dia = dia;
 		this.horario = horario;
+		this.descripcion = descripcion;
 	}
     
     

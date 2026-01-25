@@ -11,7 +11,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "categoria")
-//1.
 public class Categoria implements Serializable {
 	
     /**

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import Modelo.DAO.CategoriaDAO;
+import Modelo.DAO.HabitoDAO;
 import Modelo.Entities.Categoria;
 import Modelo.Entities.Habito;
 import jakarta.servlet.ServletException;
@@ -46,6 +47,10 @@ public class EstablecerHabitoController extends HttpServlet {
 			this.guardar(request, response);
 			break;
 
+		case "aceptar":
+			this.aceptar(request, response);
+			break;
+
 		}
 	}
 
@@ -54,18 +59,52 @@ public class EstablecerHabitoController extends HttpServlet {
 		this.ruteador(req, resp);
 	}
 
-	private void obtenerTodas(HttpServletRequest req, HttpServletResponse resp) {
+	private void obtenerTodas(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<Categoria> categoria = CategoriaDAO.obtenerTodas();
 		req.setAttribute("categorias", categoria);
-		// request.getRequestDispatcher("Vista/NuevoHabito.jsp").forward(request,
+		req.getRequestDispatcher("Vista/NuevoHabito.jsp").forward(req, resp);
 	}
 
 	public void crear(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.sendRedirect("Vista/NuevoHabito.jsp");
+		// resp.sendRedirect("Vista/NuevoHabito.jsp");
 		obtenerTodas(req, resp);
 	}
 
 	public void guardar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    String nombre = req.getParameter("nombre");
+	    String idCategoriaStr = req.getParameter("categoria");
+	    String descripcion = req.getParameter("descripcion");
+
+	    if (nombre != null && idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
+	        try {
+	            int idCategoria = Integer.parseInt(idCategoriaStr);
+
+	            Habito nuevoHabito = new Habito();
+	            nuevoHabito.setNombre(nombre);
+	            nuevoHabito.setDescripcion(descripcion);
+	            nuevoHabito.setFechaInicio(new java.util.Date());
+	            nuevoHabito.setFrecuencia(0);
+
+	            // Llamar al DAO
+	            HabitoDAO.guardar(nuevoHabito, idCategoria);
+
+	            // Redirigir
+	            resp.sendRedirect(req.getContextPath() + "/Vista/MensajeGuardado.jsp");
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            resp.sendRedirect("Vista/MensajeError.jsp");
+	        }
+	    } else {
+	        System.err.println("Error: Datos vacíos. Nombre: " + nombre + ", Categoria: " + idCategoriaStr);
+	        resp.sendRedirect("Vista/MensajeError.jsp");
+	    }
+	    
+	}
+
+	private void aceptar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.sendRedirect(req.getContextPath() + "/CrearHabitoController?ruta=crear");
+
 	}
 
 }

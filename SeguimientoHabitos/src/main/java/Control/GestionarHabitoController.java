@@ -60,6 +60,7 @@ public class GestionarHabitoController extends HttpServlet {
 //		Obtener parametros
 //		Ingresar al modelo
 //		Llamar vista
+		//response.sendRedirect("Vista/NuevoHabito.jsp");
 	}
 	private void planificarHabito(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 //		Obtener parametros

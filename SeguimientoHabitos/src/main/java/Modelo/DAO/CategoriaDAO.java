@@ -1,26 +1,24 @@
 package Modelo.DAO;
 
 import java.util.List;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
-
 import Modelo.Entities.Categoria;
 
 public class CategoriaDAO {
 	
-	private EntityManagerFactory emf;
-	private static EntityManager em;
+	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistence");
+	private static EntityManager em = emf.createEntityManager();
 	
-	public CategoriaDAO() {
-		emf = Persistence.createEntityManagerFactory("persistencia");
-		em = emf.createEntityManager();
-		inicializarCategorias();
-	}
+    static {
+        inicializarCategorias(); 
+    }
+
+	public CategoriaDAO() {}
 	
-	private void inicializarCategorias() {
+	private static void inicializarCategorias() {
 		try {
 			TypedQuery<Long> query = em.createQuery("SELECT COUNT(c) FROM Categoria c", Long.class);
 			Long count = query.getSingleResult();
@@ -40,6 +38,10 @@ public class CategoriaDAO {
 				estiloVida.setNombre("Estilo de vida");
 				em.persist(estiloVida);
 				
+                Categoria otros = new Categoria();
+				otros.setNombre("Otros");
+				em.persist(otros);
+
 				em.getTransaction().commit();
 			}
 		} catch (Exception e) {
@@ -53,5 +55,9 @@ public class CategoriaDAO {
 	public static List<Categoria> obtenerTodas() {
 		TypedQuery<Categoria> query = em.createQuery("SELECT c FROM Categoria c", Categoria.class);
 		return query.getResultList();
+	}
+	
+	public static Categoria obtenerPorId(int id) {
+	    return em.find(Categoria.class, id);
 	}
 }

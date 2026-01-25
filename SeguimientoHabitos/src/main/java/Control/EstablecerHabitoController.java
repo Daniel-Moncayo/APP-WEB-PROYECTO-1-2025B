@@ -61,7 +61,8 @@ public class EstablecerHabitoController extends HttpServlet {
 	}
 
 	public void crear(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.sendRedirect("Vista/EstablecerNuevoHabito.jsp");
+		resp.sendRedirect("Vista/NuevoHabito.jsp");
+		obtenerTodas(req, resp);
 	}
 
 	public void guardar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

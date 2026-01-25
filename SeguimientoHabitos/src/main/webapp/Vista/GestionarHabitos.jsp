@@ -15,12 +15,22 @@
         <header class="dashboard-header">
             <div class="header-content">
                 <h1>Habit Tracker</h1>
-                <!-- 
                 <div class="user-info">
-                    <span>demo@mail.com</span>
-                    <a href="index.html" class="btn-logout">Cerrar Sesión</a>
+                    <span>
+                        <% 
+                            String nombreUsuario = (String) session.getAttribute("usuarioNombre");
+                            String correoUsuario = (String) session.getAttribute("usuarioCorreo");
+                            if (nombreUsuario != null) {
+                                out.print(nombreUsuario);
+                            } else if (correoUsuario != null) {
+                                out.print(correoUsuario);
+                            } else {
+                                out.print("Usuario");
+                            }
+                        %>
+                    </span>
+                    <a href="<%= request.getContextPath() %>/LogoutController" class="btn-logout">Cerrar Sesión</a>
                 </div>
-               -->
             </div>
         </header>
 

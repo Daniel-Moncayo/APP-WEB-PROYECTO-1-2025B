@@ -2,6 +2,28 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" id="WebApp_ID" version="6.0">
   <display-name>SeguimientoHabitos</display-name>
   
+  <!-- Servlet LoginController -->
+  <servlet>
+    <servlet-name>LoginController</servlet-name>
+    <servlet-class>Control.LoginController</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>LoginController</servlet-name>
+    <url-pattern>/LoginController</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Servlet LogoutController -->
+  <servlet>
+    <servlet-name>LogoutController</servlet-name>
+    <servlet-class>Control.LogoutController</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>LogoutController</servlet-name>
+    <url-pattern>/LogoutController</url-pattern>
+  </servlet-mapping>
+  
   <!-- Jersey REST Configuration -->
   <servlet>
     <servlet-name>jersey</servlet-name>

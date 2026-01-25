@@ -33,15 +33,17 @@ public class Usuario implements Serializable {
 	@Column(name = "password", nullable = false)
 	private String password;
 
+	@Column(name = "rol", length = 20, nullable = false)
+	private String rol; // "admin" o "usuario"
 
 	public Usuario() {}
 
-	public Usuario( String nombre, String apellido, String correoElectronico, String password) {
-		
+	public Usuario(String nombre, String apellido, String correoElectronico, String password, String rol) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.correoElectronico = correoElectronico;
 		this.password = password;
+		this.rol = rol;
 	}
 
     public int getIdUsuario() {
@@ -82,6 +84,14 @@ public class Usuario implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
 	}
     
 }

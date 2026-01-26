@@ -68,7 +68,7 @@ public class HabitoDAO {
 	 * Obtiene habitos que no han sido planificados
 	 * @param planificado
 	 */
-	public void obtenerSinPlanificacion() {
+	public static void obtenerSinPlanificacion() {
 		List<Habito> habitos = listarHabitos();
 
 		// Filtrar hábitos NO planificados
@@ -84,11 +84,11 @@ public class HabitoDAO {
 	 * Lista todos los hábitos
 	 * @return una lista de hábitos creados
 	 */
-	public List<Habito> listarHabitos() {
+	public static List<Habito> listarHabitos() {
 		return em.createQuery("SELECT h FROM Habito h", Habito.class).getResultList();
 	}
 
-	public void actualizarHabito(Habito habito) {
+	public static void actualizarHabito(Habito habito) {
 		try {
 			em.getTransaction().begin();
 			em.merge(habito);
@@ -103,7 +103,7 @@ public class HabitoDAO {
 	 * @param id del hábito
 	 * @return true si se eliminó, false si no se encontró
 	 */
-	public boolean eliminarHabito(int id) {
+	public static boolean eliminarHabito(int id) {
 		try {
 			Habito h = em.find(Habito.class, id);
 			if (h != null) {

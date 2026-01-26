@@ -57,7 +57,7 @@ public class EliminarHabitoController extends HttpServlet{
 			//     int idUsuario = Integer.parseInt(idUsuarioStr);
 			//     habitos = dao.listarPorUsuario(idUsuario);
 			// } else {
-				habitos = dao.listarHabitos();
+				habitos = HabitoDAO.listarHabitos();
 			// }
 			req.setAttribute("habitos", habitos);
 			// Forward a la vista que mostrará la lista y permitirá seleccionar uno para eliminar
@@ -81,11 +81,11 @@ public class EliminarHabitoController extends HttpServlet{
 		try {
 			int idHabito = Integer.parseInt(idHabitoStr);
 			// Intentar eliminar
-			boolean eliminado = dao.eliminarHabito(idHabito);
+			boolean eliminado = HabitoDAO.eliminarHabito(idHabito);
 
 			if (eliminado) {
 				// Volver a listar hábitos para mostrar la lista actualizada
-				List<Habito> habitosActualizados = dao.listarHabitos();
+				List<Habito> habitosActualizados = HabitoDAO.listarHabitos();
 				req.setAttribute("habitos", habitosActualizados);
 				req.setAttribute("mensaje", "El hábito fue eliminado correctamente.");
 				requestDispatcherForward(req, resp, "/Vista/MensajeEliminado.jsp");

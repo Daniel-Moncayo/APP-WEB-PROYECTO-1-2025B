@@ -78,7 +78,7 @@
                     </div>
                     <h3>Modificar Hábito</h3>
                     <p>Visualiza el progreso de tus hábitos</p>
-                    <a href="ModificarHabito.jsp" class="module-btn">Modificar</a>
+                    <a href="../ModificarHabitoController" class="module-btn">Modificar</a>
                 </div>
                 
                 <div class="module-card">

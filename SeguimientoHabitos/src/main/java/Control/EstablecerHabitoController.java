@@ -26,7 +26,11 @@ public class EstablecerHabitoController extends HttpServlet {
 		String descripcion = req.getParameter("descripcion");
 
 		this.ruteador(req, resp);
-
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		this.ruteador(req, resp);
 	}
 
 	private void ruteador(HttpServletRequest request, HttpServletResponse response)
@@ -53,12 +57,7 @@ public class EstablecerHabitoController extends HttpServlet {
 
 		}
 	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.ruteador(req, resp);
-	}
-
+	
 	private void obtenerTodas(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<Categoria> categoria = CategoriaDAO.obtenerTodas();
 		req.setAttribute("categorias", categoria);
@@ -66,45 +65,47 @@ public class EstablecerHabitoController extends HttpServlet {
 	}
 
 	public void crear(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// resp.sendRedirect("Vista/NuevoHabito.jsp");
 		obtenerTodas(req, resp);
 	}
 
 	public void guardar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    String nombre = req.getParameter("nombre");
-	    String idCategoriaStr = req.getParameter("categoria");
-	    String descripcion = req.getParameter("descripcion");
+		String nombre = req.getParameter("nombre");
+		String idCategoriaStr = req.getParameter("categoria");
+		String descripcion = req.getParameter("descripcion");
 
-	    if (nombre != null && idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
-	        try {
-	            int idCategoria = Integer.parseInt(idCategoriaStr);
+		if (nombre == null || nombre.trim().isEmpty() || idCategoriaStr == null || idCategoriaStr.isEmpty()) {
 
-	            Habito nuevoHabito = new Habito();
-	            nuevoHabito.setNombre(nombre);
-	            nuevoHabito.setDescripcion(descripcion);
-	            nuevoHabito.setFechaInicio(new java.util.Date());
-	            nuevoHabito.setFrecuencia(0);
+			// Configuramos el mensaje de error
+			req.setAttribute("mensajeError", "Por favor, completa todos los campos obligatorios (Nombre y Categoría).");
 
-	            // Llamar al DAO
-	            HabitoDAO.guardar(nuevoHabito, idCategoria);
+			req.setAttribute("urlDestino", req.getContextPath() + "/CrearHabitoController?ruta=crear");
 
-	            // Redirigir
-	            resp.sendRedirect(req.getContextPath() + "/Vista/MensajeGuardado.jsp");
+			req.getRequestDispatcher("/Vista/MensajeError.jsp").forward(req, resp);
+			return;
+		}
 
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            resp.sendRedirect("Vista/MensajeError.jsp");
-	        }
-	    } else {
-	        System.err.println("Error: Datos vacíos. Nombre: " + nombre + ", Categoria: " + idCategoriaStr);
-	        resp.sendRedirect("Vista/MensajeError.jsp");
-	    }
-	    
+		try {
+			int idCategoria = Integer.parseInt(idCategoriaStr);
+
+			Habito nuevoHabito = new Habito();
+			nuevoHabito.setNombre(nombre);
+			nuevoHabito.setDescripcion(descripcion);
+			nuevoHabito.setFechaInicio(new java.util.Date());
+			nuevoHabito.setFrecuencia(0);
+
+			HabitoDAO.guardar(nuevoHabito, idCategoria);
+
+			resp.sendRedirect(req.getContextPath() + "/Vista/MensajeGuardado.jsp");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect("Vista/MensajeError.jsp");
+		}
+
 	}
 
 	private void aceptar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.sendRedirect(req.getContextPath() + "/CrearHabitoController?ruta=crear");
-
 	}
 
 }

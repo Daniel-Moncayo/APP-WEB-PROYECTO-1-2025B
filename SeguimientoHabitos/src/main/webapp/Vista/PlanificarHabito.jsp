@@ -5,11 +5,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planificar Hábito - Habit Tracker</title>
-    <link rel="stylesheet" href="Styles/styles.css">
+    <title>Planificar Hábitos - Habit Tracker</title>
+    
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Vista/Styles/styles.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Cal+Sans&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Lexend+Deca:wght@100..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Bhaiksuki&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+
+    <style>
+        .habitos-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .habito-item {
+            background: white;
+            border: 1px solid #e2e8f0; /* Borde gris suave */
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            /* YA NO TIENE CURSOR POINTER EN TODA LA TARJETA */
+        }
+
+        .habito-item:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border-color: #cbd5e1;
+        }
+
+        .habito-info h3 {
+            margin: 0 0 8px 0;
+            color: #1e293b;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .habito-badge {
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* --- AQUÍ ARREGLAMOS EL COLOR NARANJA --- */
+        .habito-schedule {
+            text-align: right;
+            font-size: 0.9rem;
+            margin-right: 20px; /* Espacio antes del botón */
+        }
+
+        .text-date {
+            color: #94a3b8;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .status-warning {
+            /* Forzamos el color naranja fuerte */
+            color: #ea580c !important; 
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            background-color: #ffedd5; /* Fondo naranja muy suave */
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        /* --- BOTÓN "SELECCIONAR HÁBITO" --- */
+        .btn-select {
+            background-color: #2c3e50; /* Color oscuro elegante */
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+            white-space: nowrap; /* Evita que el texto se parta */
+        }
+
+        .btn-select:hover {
+            background-color: #1a252f;
+            transform: translateY(-1px);
+        }
+
+        /* Estado Vacío */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+            opacity: 0.5;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
@@ -17,155 +120,55 @@
             <div class="header-content">
                 <h1>Habit Tracker</h1>
                 <div class="user-info">
-                	<!-- 
-                    <span>demo@mail.com</span>
-                	 -->
-                    <a href="GestionarHabitos.jsp" class="btn-back">← Volver</a>
+                    <a href="${pageContext.request.contextPath}/Vista/GestionarHabitos.jsp" class="btn-back">← Volver</a>
                 </div>
             </div>
         </header>
 
         <main class="dashboard-main">
-            <div class="form-container">
+            <div class="form-container" style="max-width: 900px; width: 95%;">
                 <div class="form-header">
-                    <h2>Planificar Hábito</h2>
-                    <p>Define los días, horarios y tareas para tu hábito</p>
+                    <h2>Planificar Hábitos</h2>
+                    <p>Selecciona un hábito pendiente para definir sus días y horarios</p>
                 </div>
 
-                <form method="POST" action="PlanificarHabitoController" class="habit-form" id="planificarForm" novalidate>
-                    <!-- Selección de días -->
-                    <div class="form-section">
-                        <h3>Días de la Semana <span class="required">*</span></h3>
-                        <div class="days-grid">
-                            <label class="day-checkbox">
-                                <input type="checkbox" name="dias" value="lunes">
-                                <span class="day-label">Lunes</span>
-                            </label>
-                            <label class="day-checkbox">
-                                <input type="checkbox" name="dias" value="martes">
-                                <span class="day-label">Martes</span>
-                            </label>
-                            <label class="day-checkbox">
-                                <input type="checkbox" name="dias" value="miercoles">
-                                <span class="day-label">Miércoles</span>
-                            </label>
-                            <label class="day-checkbox">
-                                <input type="checkbox" name="dias" value="jueves">
-                                <span class="day-label">Jueves</span>
-                            </label>
-                            <label class="day-checkbox">
-                                <input type="checkbox" name="dias" value="viernes">
-                                <span class="day-label">Viernes</span>
-                            </label>
-                            <label class="day-checkbox">
-                                <input type="checkbox" name="dias" value="sabado">
-                                <span class="day-label">Sábado</span>
-                            </label>
-                            <label class="day-checkbox">
-                                <input type="checkbox" name="dias" value="domingo">
-                                <span class="day-label">Domingo</span>
-                            </label>
+                <div class="habitos-list">
+                    
+                    <c:if test="${empty habitosPendientes}">
+                        <div class="empty-state">
+                            <span class="empty-icon">🎉</span>
+                            <h3>¡Todo al día!</h3>
+                            <p>No tienes hábitos pendientes de planificar.</p>
+                            <a href="${pageContext.request.contextPath}/Vista/GestionarHabitos.jsp" class="btn-select" style="margin-top:20px; display:inline-block;">Volver al Inicio</a>
                         </div>
-                    </div>
+                    </c:if>
 
-                    <!-- Hora -->
-                    <div class="form-group">
-                        <label for="hora">Hora <span class="required">*</span></label>
-                        <input type="time" id="hora" name="hora">
-                    </div>
-
-                    <!-- Tareas -->
-                    <div class="form-section">
-                        <h3>Tareas Asociadas <span class="required">*</span></h3>
-                        <p class="section-description">Agrega al menos una tarea que realizarás para cumplir este hábito</p>
-                        
-                        <div id="tareasContainer">
-                            <div class="tarea-item">
-                                <input type="text" class="tarea-input" placeholder="Ej: Ir al gimnasio">
-                                <button type="button" class="btn-remove-tarea" onclick="removeTarea(this)">✕</button>
+                    <c:forEach items="${habitosPendientes}" var="h">
+                        <div class="habito-item">
+                            
+                            <div class="habito-info">
+                                <h3>${h.nombre}</h3>
+                                <span class="habito-badge">${h.categoria.nombre}</span>
                             </div>
-                        </div>
-                        
-                        <button type="button" class="btn-add-tarea" onclick="addTarea()">+ Agregar otra tarea</button>
-                    </div>
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn-submit">Guardar Planificación</button>
-                        <a href="GestionarHabitos.jsp" class="btn-cancel">Volver</a>
-                    </div>
-                </form>
+                            <div class="habito-schedule">
+                                <span class="text-date">Creado: ${h.fechaInicio}</span>
+                                <span class="status-warning">
+                                    <span>⚠</span> Sin Planificar
+                                </span>
+                            </div>
+
+                            <a href="${pageContext.request.contextPath}/PlanificarHabitoController?ruta=seleccionarHabito&id=${h.idHabito}" 
+                               class="btn-select">
+                                Seleccionar hábito
+                            </a>
+
+                        </div>
+                    </c:forEach>
+
+                </div>
             </div>
         </main>
-
-        <!-- Modal de error -->
-        <div class="modal" id="errorModal">
-            <div class="modal-content">
-                <h2>Campos Incompletos</h2>
-                <p id="errorMessage">Por favor, completa todos los campos obligatorios.</p>
-                <button class="btn-close" onclick="closeModal()">Entendido</button>
-            </div>
-        </div>
     </div>
-
-    <script>
-        function addTarea() {
-            const container = document.getElementById('tareasContainer');
-            const tareaItem = document.createElement('div');
-            tareaItem.className = 'tarea-item';
-            tareaItem.innerHTML = `
-                <input type="text" class="tarea-input" placeholder="Ej: Ir al gimnasio">
-                <button type="button" class="btn-remove-tarea" onclick="removeTarea(this)">✕</button>
-            `;
-            container.appendChild(tareaItem);
-        }
-
-        function removeTarea(button) {
-            const tareasContainer = document.getElementById('tareasContainer');
-            if (tareasContainer.children.length > 1) {
-                button.parentElement.remove();
-            }
-        }
-
-        document.getElementById('planificarForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validar días seleccionados
-            const diasCheckboxes = document.querySelectorAll('input[name="dias"]:checked');
-            const hora = document.getElementById('hora').value;
-            
-            // Validar tareas
-            const tareasInputs = document.querySelectorAll('.tarea-input');
-            const tareas = Array.from(tareasInputs).filter(input => input.value.trim() !== '');
-            
-            let errorMessage = '';
-            
-            if (diasCheckboxes.length === 0) {
-                errorMessage = 'Por favor, selecciona al menos un día de la semana.';
-            } else if (!hora) {
-                errorMessage = 'Por favor, selecciona una hora para el hábito.';
-            } else if (tareas.length === 0) {
-                errorMessage = 'Por favor, agrega al menos una tarea asociada al hábito.';
-            }
-            
-            if (errorMessage) {
-                document.getElementById('errorMessage').textContent = errorMessage;
-                document.getElementById('errorModal').classList.add('show');
-            } else {
-                // Guardar y redirigir
-                alert('Hábito planificado exitosamente');
-                window.location.href = 'GestionarHabitos.jsp';
-            }
-        });
-        
-        function closeModal() {
-            document.getElementById('errorModal').classList.remove('show');
-        }
-        
-        document.getElementById('errorModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('show');
-            }
-        });
-    </script>
 </body>
 </html>

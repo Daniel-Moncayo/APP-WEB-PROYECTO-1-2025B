@@ -1,5 +1,6 @@
 package Modelo.DAO;
 
+import java.util.Date;
 import java.util.List;
 
 import Modelo.Entities.Categoria;
@@ -87,6 +88,19 @@ public class HabitoDAO {
 	public static List<Habito> listarHabitos() {
 		return em.createQuery("SELECT h FROM Habito h", Habito.class).getResultList();
 	}
+	
+	/**
+	 * Lista todos los habitos
+	 * @return habitos ordenados por su ID
+	 */
+	public static List<Habito> listarTodos() {
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	        return em.createQuery("SELECT h FROM Habito h ORDER BY h.idHabito DESC", Habito.class).getResultList();
+	    } finally {
+	        em.close();
+	    }
+	}
 
 	public static void actualizarHabito(Habito habito) {
 		try {
@@ -117,6 +131,73 @@ public class HabitoDAO {
 			try { em.getTransaction().rollback(); } catch (Exception ex) { }
 			return false;
 		}
+	}
+	
+	public static Habito buscarPorId(int id) {
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	        return em.find(Habito.class, id);
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static List<Habito> obtenerNoPlanificados() {
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	        // Asumimos que frecuencia 0 significa "No planificado"
+	        return em.createQuery("SELECT h FROM Habito h WHERE h.frecuencia = 0", Habito.class).getResultList();
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param habito
+	 */
+	public static void actualizar(Habito habito) {
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	        em.getTransaction().begin();
+	        em.merge(habito);
+	        em.getTransaction().commit();
+	    } catch (Exception e) {
+	        if (em.getTransaction().isActive()) {
+	            em.getTransaction().rollback();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	/**
+	 * Verifica si ya existe un hábito con esa hora, excluyendo el hábito actual.
+	 * Flow 4.2: Hora Duplicada.
+	 * @param horario
+	 * @param idHabitoActual
+	 * @return true si ya existe ese horario
+	 */
+	public static boolean existeHoraRegistrada(Date horario, int idHabitoActual) {
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	        // Consultamos si hay algún hábito con el mismo horario pero diferente ID
+	        String jpql = "SELECT COUNT(h) FROM Habito h WHERE h.horario = :horario AND h.idHabito != :id";
+	        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+	        query.setParameter("horario", horario);
+	        query.setParameter("id", idHabitoActual);
+	        
+	        Long count = query.getSingleResult();
+	        return count > 0; // Retorna true si ya existe (es duplicada)
+	    } finally {
+	        em.close();
+	    }
 	}
 
 }

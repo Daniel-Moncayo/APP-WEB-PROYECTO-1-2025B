@@ -1,15 +1,76 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planificar Hábitos - Habit Tracker</title>
-    <link rel="stylesheet" href="Styles/styles.css">
+    <title>Seleccionar Hábito - Habit Tracker</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Vista/Styles/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Cal+Sans&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Lexend+Deca:wght@100..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Bhaiksuki&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos específicos para la lista */
+        .habitos-list { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        
+        .habito-item {
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 12px; 
+            padding: 20px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .habito-item:hover { 
+            transform: translateY(-2px); 
+            border-color: #94a3b8; 
+        }
+        
+        .habito-badge { 
+            background-color: #e0f2fe; 
+            color: #0284c7; 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            font-weight: bold; 
+        }
+        
+        .habito-schedule { 
+            text-align: right; 
+            font-size: 0.9rem; 
+            color: #64748b; 
+        }
+        
+        .btn-edit {
+            background-color: #2c3e50; 
+            color: white; 
+            padding: 8px 16px; 
+            border-radius: 8px;
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-edit:hover { 
+            background-color: #1e293b; 
+        }
+        
+        .empty-state { 
+            text-align: center; 
+            padding: 40px; 
+            color: #94a3b8; 
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
@@ -17,91 +78,56 @@
             <div class="header-content">
                 <h1>Habit Tracker</h1>
                 <div class="user-info">
-                	<!-- 
-                    <span>demo@mail.com</span>
-                	 -->
-                    <a href="../GestionarHabitoController" class="btn-back">← Volver</a>
+                    <a href="${pageContext.request.contextPath}/Vista/GestionarHabitos.jsp" class="btn-back">← Volver</a>
                 </div>
             </div>
         </header>
 
         <main class="dashboard-main">
-            <div class="form-container">
+            <div class="form-container" style="max-width: 900px; width: 95%;">
                 <div class="form-header">
-                    <h2>Planificar Hábitos</h2>
-                    <p>Selecciona un hábito para modificar su planificación</p>
+                    <h2>Modificar Hábitos</h2>
+                    <p>Selecciona un hábito de la lista para editar sus detalles</p>
                 </div>
 
-                <!-- Lista de Hábitos -->
                 <div class="habitos-list">
-                    <div class="habito-item" onclick="editarHabito(1)">
-                        <div class="habito-info">
-                            <h3>Hacer Ejercicio</h3>
-                            <span class="habito-badge">Personal</span>
+                    
+                    <c:if test="${empty listaHabitos}">
+                        <div class="empty-state">
+                            <h3>No hay hábitos registrados</h3>
+                            <p>Crea un nuevo hábito primero para poder modificarlo.</p>
+                            <a href="${pageContext.request.contextPath}/Vista/GestionarHabitos.jsp" class="btn-back" style="display:inline-block; margin-top:10px;">Ir al Inicio</a>
                         </div>
-                        <div class="habito-schedule">
-                            <p>📅 Lun, Mié, Vie</p>
-                            <p>⏰ 06:00 AM</p>
-                        </div>
-                        <button class="btn-edit">Editar →</button>
-                    </div>
+                    </c:if>
 
-                    <div class="habito-item" onclick="editarHabito(2)">
-                        <div class="habito-info">
-                            <h3>Leer 30 minutos</h3>
-                            <span class="habito-badge">Educativo</span>
-                        </div>
-                        <div class="habito-schedule">
-                            <p>📅 Todos los días</p>
-                            <p>⏰ 08:00 PM</p>
-                        </div>
-                        <button class="btn-edit">Editar →</button>
-                    </div>
+                    <c:forEach items="${listaHabitos}" var="h">
+                        <div class="habito-item">
+                            <div class="habito-info">
+                                <h3 style="margin: 0 0 5px 0; color: #334155;">${h.nombre}</h3>
+                                <span class="habito-badge">${h.categoria.nombre}</span>
+                            </div>
+                            
+                            <div class="habito-schedule">
+                                <c:choose>
+                                    <c:when test="${h.frecuencia > 0}">
+                                        <p>📅 ${h.dia}</p>
+                                        <p>⏰ <fmt:formatDate value="${h.horario}" pattern="hh:mm a" /></p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p style="color: #f59e0b;">⚠ Sin planificar</p>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
 
-                    <div class="habito-item" onclick="editarHabito(3)">
-                        <div class="habito-info">
-                            <h3>Meditar</h3>
-                            <span class="habito-badge">Personal</span>
+                            <a href="${pageContext.request.contextPath}/ModificarHabitoController?ruta=cargar&id=${h.idHabito}" class="btn-edit">
+                                Editar →
+                            </a>
                         </div>
-                        <div class="habito-schedule">
-                            <p>📅 Lun a Vie</p>
-                            <p>⏰ 07:00 AM</p>
-                        </div>
-                        <button class="btn-edit">Editar →</button>
-                    </div>
+                    </c:forEach>
+
                 </div>
             </div>
         </main>
-
-        <!-- Modal cuando no hay hábitos -->
-        <div class="modal" id="noHabitsModal">
-            <div class="modal-content">
-                <h2>Sin Hábitos Creados</h2>
-                <p>Todavía no has creado ningún hábito. Empieza creando uno desde el menú principal.</p>
-                <button class="btn-close" onclick="redirectToMain()">Ir al Menú Principal</button>
-            </div>
-        </div>
     </div>
-
-    <script>
-        // Simular si hay hábitos (cambiar a false para mostrar el modal)
-        const tieneHabitos = true;
-
-        window.addEventListener('DOMContentLoaded', function() {
-            if (!tieneHabitos) {
-                document.getElementById('noHabitsModal').classList.add('show');
-            }
-        });
-
-        function editarHabito(habitoId) {
-            // Guardar el ID del hábito para editar
-            localStorage.setItem('habitoEditarId', habitoId);
-            window.location.href = 'ModificarHabito.jsp';
-        }
-
-        function redirectToMain() {
-            window.location.href = 'GestionarHabito.jsp';
-        }
-    </script>
 </body>
 </html>

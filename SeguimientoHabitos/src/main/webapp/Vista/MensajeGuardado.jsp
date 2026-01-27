@@ -70,17 +70,30 @@
 </head>
 <body>
 
+    <body>
     <div class="success-card">
         <div class="icon-circle">
             <span class="check-icon">&#10003;</span>
         </div>
-        <h1>¡Guardado Exitoso!</h1>
-        <p>Tu nuevo hábito se ha registrado correctamente en el sistema.</p>
         
-        <a href="${pageContext.request.contextPath}/CrearHabitoController?ruta=crear" class="btn-continue">
-            Aceptar
+        <h1>¡Excelente!</h1>
+        
+        <p>
+            <c:choose>
+                <c:when test="${not empty param.mensaje}">
+                    ${param.mensaje}
+                </c:when>
+                <c:otherwise>
+                    La operación se realizó con éxito.
+                </c:otherwise>
+            </c:choose>
+        </p>
+        
+        <a href="${pageContext.request.contextPath}/PlanificarHabitoController?ruta=listar" class="btn-continue">
+            Continuar
         </a>
     </div>
+</body>
 
 </body>
 </html>

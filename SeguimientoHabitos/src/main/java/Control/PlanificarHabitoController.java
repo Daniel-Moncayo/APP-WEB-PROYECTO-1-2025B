@@ -102,27 +102,47 @@ public class PlanificarHabitoController extends HttpServlet {
             String[] diasArray = req.getParameterValues("dias");
             String horaStr = req.getParameter("hora"); 
             
-            int frecuencia = diasArray.length;
-            String diasStr = String.join(",", diasArray);
+            int frecuencia = (diasArray != null) ? diasArray.length : 0;
+            String diasStr = (diasArray != null) ? String.join(",", diasArray) : "";
             
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             Date horario = sdf.parse(horaStr);
 
-            // Actualizar objeto
             Habito habito = HabitoDAO.buscarPorId(id);
             habito.setFrecuencia(frecuencia);
             habito.setDia(diasStr);
             habito.setHorario(horario);
 
-            // Guardar en BD
             HabitoDAO.actualizar(habito);
 
+            // 4. GUARDAR LAS TAREAS (Lógica Nueva)
+            String[] tareasNombres = req.getParameterValues("tareas");
+            
+            if (tareasNombres != null) {
+                for (String nombreTarea : tareasNombres) {
+                    if (nombreTarea != null && !nombreTarea.trim().isEmpty()) {
+                        Modelo.Entities.Tarea nuevaTarea = new Modelo.Entities.Tarea();
+                        nuevaTarea.setNombreTarea(nombreTarea);
+                        nuevaTarea.setHabito(habito);
+                        
+                        // Guardamos usando el DAO de Tarea
+                        Modelo.DAO.TareaDAO.guardar(nuevaTarea);
+                    }
+                }
+            }
+
             String mensaje = "Planificación Guardada Exitosamente";
+            
+            String destino = req.getContextPath() + "/PlanificarHabitoController?ruta=listar";
+
             String mensajeEncoded = java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
-            resp.sendRedirect(req.getContextPath() + "/Vista/MensajeGuardado.jsp?mensaje=" + mensajeEncoded);
+            String destinoEncoded = java.net.URLEncoder.encode(destino, java.nio.charset.StandardCharsets.UTF_8);
+
+            resp.sendRedirect(req.getContextPath() + "/Vista/MensajeGuardado.jsp?mensaje=" + mensajeEncoded + "&urlDestino=" + destinoEncoded);
 
         } catch (Exception e) {
             e.printStackTrace();
+            // En caso de error técnico grave
             resp.sendRedirect(req.getContextPath() + "/Vista/MensajeError.jsp");
         }
     }

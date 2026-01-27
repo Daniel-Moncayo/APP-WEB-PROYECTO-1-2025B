@@ -3,28 +3,29 @@ package Modelo.Entities;
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "Tarea")
 public class Tarea implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idTarea;
 	
-	@Column(name = "nombre_tarea")
+	@Column(name = "nombreTarea")
 	private String nombreTarea; // Cambio de int a String para poder escribir el nombre
 	
 	@ManyToOne
-	@JoinColumn(name = "id_habito")
+	@JoinColumn(name = "idHabito")
 	private Habito habito; // Cambio de int a la clase Habito para crear la relación
 	
 	public Tarea() {}

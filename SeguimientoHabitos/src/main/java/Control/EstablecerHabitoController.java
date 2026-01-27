@@ -86,6 +86,11 @@ public class EstablecerHabitoController extends HttpServlet {
 
 		try {
 			int idCategoria = Integer.parseInt(idCategoriaStr);
+			
+			String mensaje = "¡Hábito creado correctamente!";
+			String destino = req.getContextPath() + "/CrearHabitoController?ruta=crear";
+			String mensajeEnc = java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
+			String destinoEnc = java.net.URLEncoder.encode(destino, java.nio.charset.StandardCharsets.UTF_8);
 
 			Habito nuevoHabito = new Habito();
 			nuevoHabito.setNombre(nombre);
@@ -95,8 +100,7 @@ public class EstablecerHabitoController extends HttpServlet {
 
 			HabitoDAO.guardar(nuevoHabito, idCategoria);
 
-			resp.sendRedirect(req.getContextPath() + "/Vista/MensajeGuardado.jsp");
-
+			resp.sendRedirect(req.getContextPath() + "/Vista/MensajeGuardado.jsp?mensaje=" + mensajeEnc + "&urlDestino=" + destinoEnc);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resp.sendRedirect("Vista/MensajeError.jsp");

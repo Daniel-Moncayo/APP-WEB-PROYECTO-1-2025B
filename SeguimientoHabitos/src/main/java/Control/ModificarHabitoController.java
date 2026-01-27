@@ -96,7 +96,7 @@ public class ModificarHabitoController extends HttpServlet {
             Habito habito = HabitoDAO.buscarPorId(id);
             
             // 2. Buscamos las categorías (para el <select>)
-            List<Categoria> categorias = CategoriaDAO.listar(); 
+            List<Categoria> categorias = CategoriaDAO.obtenerTodas();
 
             req.setAttribute("habito", habito);
             req.setAttribute("categorias", categorias);

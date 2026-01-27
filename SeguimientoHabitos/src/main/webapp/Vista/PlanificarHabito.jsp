@@ -139,7 +139,9 @@
                             <span class="empty-icon">🎉</span>
                             <h3>¡Todo al día!</h3>
                             <p>No tienes hábitos pendientes de planificar.</p>
+                            <!-- 
                             <a href="${pageContext.request.contextPath}/Vista/GestionarHabitos.jsp" class="btn-select" style="margin-top:20px; display:inline-block;">Volver al Inicio</a>
+                             -->
                         </div>
                     </c:if>
 

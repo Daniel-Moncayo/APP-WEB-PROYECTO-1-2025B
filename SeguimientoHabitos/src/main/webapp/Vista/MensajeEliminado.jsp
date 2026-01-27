@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -27,10 +26,19 @@
                 </div>
 
                 <div class="habit-stat-card">
-                    <p style="color:var(--primary); font-weight:600; margin-bottom:12px;">${mensaje}</p>
+                    <p style="color:var(--primary); font-weight:600; margin-bottom:12px;">
+                        ${not empty mensaje ? mensaje : 'El hábito se eliminó correctamente.'}
+                    </p>
+                    
                     <div style="display:flex; gap:12px;">
-                        <a href="${pageContext.request.contextPath}/Vista/EliminarHabito.jsp" class="module-btn">Volver a eliminar</a>
-                        <a href="${pageContext.request.contextPath}/Vista/GestionarHabitos.jsp" class="btn-cancel">Ir al Dashboard</a>
+                        
+                        <a href="${pageContext.request.contextPath}/EliminarHabitoController?accion=listar" class="module-btn">
+                            Volver a eliminar
+                        </a>
+
+                        <a href="${pageContext.request.contextPath}/Vista/GestionarHabitos.jsp" class="btn-cancel">
+                            Ir al Dashboard
+                        </a>
                     </div>
                 </div>
 

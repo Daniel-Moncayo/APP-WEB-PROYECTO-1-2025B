@@ -118,19 +118,31 @@ public class HabitoDAO {
 	 * @return true si se eliminó, false si no se encontró
 	 */
 	public static boolean eliminarHabito(int id) {
-		try {
-			Habito h = em.find(Habito.class, id);
-			if (h != null) {
-				em.getTransaction().begin();
-				em.remove(h);
-				em.getTransaction().commit();
-				return true;
-			}
-			return false;
-		} catch (Exception e) {
-			try { em.getTransaction().rollback(); } catch (Exception ex) { }
-			return false;
-		}
+	    // 1. Crear un EntityManager nuevo y fresco
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	        em.getTransaction().begin();
+	        
+	        // 2. Buscar el hábito
+	        Habito h = em.find(Habito.class, id);
+	        
+	        if (h != null) {
+	            // 3. Eliminar (Si tienes Cascade en BD o JPA, se borrarán las tareas solas)
+	            em.remove(h);
+	            em.getTransaction().commit();
+	            return true;
+	        }
+	        return false; // No existía
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace(); // Mira la consola de Eclipse si falla
+	        if (em.getTransaction().isActive()) {
+	            em.getTransaction().rollback();
+	        }
+	        return false;
+	    } finally {
+	        em.close(); // Siempre cerrar
+	    }
 	}
 	
 	public static Habito buscarPorId(int id) {

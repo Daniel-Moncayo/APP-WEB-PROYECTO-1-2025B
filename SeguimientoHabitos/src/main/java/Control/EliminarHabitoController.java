@@ -12,99 +12,102 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/EliminarHabitoController")
-public class EliminarHabitoController extends HttpServlet{
+public class EliminarHabitoController extends HttpServlet {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.ruteador(req, resp);
-	}
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.ruteador(req, resp);
+    }
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.ruteador(req, resp);
-	}
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.ruteador(req, resp);
+    }
 
-	private void ruteador(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String accion = (request.getParameter("accion") != null) ? request.getParameter("accion") : "listar";
-		switch (accion) {
-			case "listar":
-				this.eliminarHabito(request, response);
-				break;
-			case "seleccionar":
-				this.seleccionarHabito(request, response);
-				break;
-			default:
-				this.eliminarHabito(request, response);
-				break;
-		}
-	}
+    private void ruteador(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Por defecto listamos
+        String accion = (request.getParameter("accion") != null) ? request.getParameter("accion") : "listar";
+        
+        System.out.println("--- DEBUG: Accion recibida en EliminarController: " + accion);
 
-	public void eliminarHabito(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-//		1. Obtener parámetros (idUsuario)
-//		2. Hablar con modelo (listarHabitos por idUsuario)
-//		3. Llamar a la vista (Mostrar lista de hábitos)
-		String idUsuarioStr = req.getParameter("idUsuario");
-		HabitoDAO dao = new HabitoDAO();
-		List<Habito> habitos = null;
-		try {
-			// Si tuvieramos el id de usuario, filtraríamos aquí. Como aún no está implementado, listamos todos.
-			// if (idUsuarioStr != null) {
-			//     int idUsuario = Integer.parseInt(idUsuarioStr);
-			//     habitos = dao.listarPorUsuario(idUsuario);
-			// } else {
-				habitos = HabitoDAO.listarHabitos();
-			// }
-			req.setAttribute("habitos", habitos);
-			// Forward a la vista que mostrará la lista y permitirá seleccionar uno para eliminar
-			requestDispatcherForward(req, resp, "/Vista/EliminarHabito.jsp");
-		} catch (Exception e) {
-			req.setAttribute("error", "No se pudieron obtener los hábitos.");
-			requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
-		}
-		
-	}
+        switch (accion) {
+            case "listar":
+                this.mostrarListaParaEliminar(request, response);
+                break;
+            case "seleccionar": // Ojo: tu JSP debe mandar accion=seleccionar al hacer clic en borrar
+                this.eliminarElHabitoSeleccionado(request, response);
+                break;
+            default:
+                this.mostrarListaParaEliminar(request, response);
+                break;
+        }
+    }
 
-	public void seleccionarHabito(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		String idHabitoStr = req.getParameter("idHabito");
-		HabitoDAO dao = new HabitoDAO();
-		if (idHabitoStr == null || idHabitoStr.isEmpty()) {
-			req.setAttribute("error", "No se indicó el hábito a eliminar.");
-			requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
-			return;
-		}
+    /**
+     * Muestra la lista de hábitos con el botón de eliminar.
+     */
+    public void mostrarListaParaEliminar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            // CORRECCIÓN: Usamos listarTodos() que crea su propia conexión segura
+            List<Habito> habitos = HabitoDAO.listarTodos();
+            
+            req.setAttribute("habitos", habitos);
+            requestDispatcherForward(req, resp, "/Vista/EliminarHabito.jsp");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("error", "Error al cargar la lista: " + e.getMessage());
+            requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
+        }
+    }
 
-		try {
-			int idHabito = Integer.parseInt(idHabitoStr);
-			// Intentar eliminar
-			boolean eliminado = HabitoDAO.eliminarHabito(idHabito);
+    /**
+     * Recibe el ID y ejecuta el borrado.
+     */
+    public void eliminarElHabitoSeleccionado(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idHabitoStr = req.getParameter("idHabito");
+        
+        System.out.println("--- DEBUG: Intentando eliminar hábito ID: " + idHabitoStr);
 
-			if (eliminado) {
-				// Volver a listar hábitos para mostrar la lista actualizada
-				List<Habito> habitosActualizados = HabitoDAO.listarHabitos();
-				req.setAttribute("habitos", habitosActualizados);
-				req.setAttribute("mensaje", "El hábito fue eliminado correctamente.");
-				requestDispatcherForward(req, resp, "/Vista/MensajeEliminado.jsp");
-			} else {
-				req.setAttribute("error", "No se encontró el hábito a eliminar o no se pudo eliminar.");
-				requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
-			}
-		} catch (NumberFormatException nfe) {
-			req.setAttribute("error", "Id de hábito inválido.");
-			requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
-		} catch (Exception e) {
-			req.setAttribute("error", "Ocurrió un error al eliminar el hábito.");
-			requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
-		}
-	}
+        if (idHabitoStr == null || idHabitoStr.isEmpty()) {
+            req.setAttribute("error", "No se recibió el ID del hábito a eliminar.");
+            requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
+            return;
+        }
 
-	// Small helper to keep forwarding code concise
-	private void requestDispatcherForward(HttpServletRequest req, HttpServletResponse resp, String vista) throws ServletException, IOException {
-		req.getRequestDispatcher(vista).forward(req, resp);
-	}
+        try {
+            int idHabito = Integer.parseInt(idHabitoStr);
+            
+            // Llamamos al método robusto del DAO
+            boolean eliminado = HabitoDAO.eliminarHabito(idHabito);
 
+            if (eliminado) {
+                // Éxito: Vamos al mensaje de eliminado
+                req.setAttribute("mensaje", "El hábito y sus tareas asociadas fueron eliminados correctamente.");
+                
+                // Redirección inteligente al Dashboard al dar Aceptar
+                String destino = req.getContextPath() + "/EliminarHabitoController?accion=listar";
+                req.setAttribute("urlDestino", destino);
+                
+                requestDispatcherForward(req, resp, "/Vista/MensajeEliminado.jsp");
+            } else {
+                req.setAttribute("error", "No se pudo eliminar el hábito. Verifique que exista.");
+                requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
+            }
+            
+        } catch (NumberFormatException nfe) {
+            req.setAttribute("error", "El ID del hábito no es un número válido.");
+            requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
+        } catch (Exception e) {
+            e.printStackTrace(); // ¡MIRA LA CONSOLA SI FALLA!
+            req.setAttribute("error", "Error técnico al eliminar: " + e.getMessage());
+            requestDispatcherForward(req, resp, "/Vista/MensajeError.jsp");
+        }
+    }
+
+    private void requestDispatcherForward(HttpServletRequest req, HttpServletResponse resp, String vista) throws ServletException, IOException {
+        req.getRequestDispatcher(vista).forward(req, resp);
+    }
 }
